@@ -496,6 +496,7 @@ body {
 
 .sponsors .sponsors_content .sponsors_content_img {
   position: relative;
+  width: 80%;
 }
 
 .sponsors .sponsors_content .sponsors_content_img:before {
