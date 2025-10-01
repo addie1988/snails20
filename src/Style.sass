@@ -313,8 +313,10 @@ body
 
 .manufacturers
     position: relative
-    padding: 60px 0
+    margin: 50px 0
     background-color: #000
+    border-top: 1px solid $color_p
+    border-bottom: .5px solid $color_p
     overflow: hidden
 
     .manufacturers_content
@@ -329,9 +331,11 @@ body
             .manufacturers_track
                 display: flex
                 animation: scroll 30s linear infinite
-                width: calc(200% + 40px) // 兩倍的寬度加上間距
                 will-change: transform // 優化動畫性能
                 backface-visibility: hidden // 防止閃爍
+
+                &.paused
+                    animation-play-state: paused
 
                 .manufacturer_item
                     flex: 0 0 auto
@@ -339,20 +343,22 @@ body
                     display: flex
                     align-items: center
                     justify-content: center
-                    min-width: 120px
-                    height: 60px
+                    width: 200px
+                    height: 100px
                     touch-action: manipulation // 優化觸控響應
+                    border-right: .5px solid $color_p
+                    padding-right: 40px
+                    padding: 20px
 
                     img
-                        max-width: 100%
-                        max-height: 100%
+                        width: 100%
+                        height: 100%
                         object-fit: contain
                         filter: invert(0.7) contrast(0.9) brightness(1)
                         transition: all 0.3s ease
                         image-rendering: -webkit-optimize-contrast // 優化圖片渲染
 
                         &:hover
-                            filter: grayscale(0%) brightness(1)
                             transform: scale(1.1)
 
 // 輪播動畫
@@ -360,11 +366,9 @@ body
     0%
         transform: translateX(0)
     100%
-        transform: translateX(-50%)
+        transform: translateX(-33.333%)
 
-// 暫停動畫當滑鼠懸停
-.manufacturers:hover .manufacturers_track
-    animation-play-state: paused
+// 暫停動畫當滑鼠懸停 - 現在由 JavaScript 控制
 
 // 響應式設計
 @media screen and (max-width: 1024px)
@@ -421,6 +425,19 @@ body
     position: relative
     padding: 60px 0
     overflow: hidden
+    // 為每個偽元素定義獨立的 CSS 變數
+    --sponsors-content-img-before-x: 0px
+    --sponsors-content-img-before-y: 0px
+    --sponsors-content-img-after-x: 0px
+    --sponsors-content-img-after-y: 0px
+    --sponsors-content-img-content-before-x: 0px
+    --sponsors-content-img-content-before-y: 0px
+    --sponsors-content-img-content-after-x: 0px
+    --sponsors-content-img-content-after-y: 0px
+    --sponsors-content-img-area-before-x: 0px
+    --sponsors-content-img-area-before-y: 0px
+    --sponsors-content-img-area-after-x: 0px
+    --sponsors-content-img-area-after-y: 0px
 
     .sponsors_content
         margin: 0 auto
@@ -432,11 +449,86 @@ body
         .sponsors_content_img
             position: relative
 
+            &:before
+                content: ''
+                position: absolute
+                width: 118px
+                height: 48px
+                top: 0px
+                left: 0px
+                background: url('./images/sponsors_content_img_1.svg') no-repeat
+                z-index: 2
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                transform: translate(var(--sponsors-content-img-before-x), var(--sponsors-content-img-before-y))
+
+            &::after
+                content: ''
+                position: absolute
+                width: 118px
+                height: 48px
+                top: 0px
+                right: 0px
+                background: url('./images/sponsors_content_img_2.svg') no-repeat
+                z-index: 2
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                transform: translate(var(--sponsors-content-img-after-x), var(--sponsors-content-img-after-y))
+
             .sponsors_content_img_content
                 margin: 0 auto
+                position: relative
+
+                &:before
+                    content: ''
+                    position: absolute
+                    width: 118px
+                    height: 48px
+                    bottom: 440px
+                    left: 600px
+                    background: url('./images/sponsors_content_img_content_1.svg') no-repeat
+                    z-index: 2
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                    transform: translate(var(--sponsors-content-img-content-before-x), var(--sponsors-content-img-content-before-y))
+
+                &::after
+                    content: ''
+                    position: absolute
+                    width: 118px
+                    height: 48px
+                    bottom: 440px
+                    right: 600px
+                    background: url('./images/sponsors_content_img_content_2.svg') no-repeat
+                    z-index: 2
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                    transform: translate(var(--sponsors-content-img-content-after-x), var(--sponsors-content-img-content-after-y))
 
                 .sponsors_content_img_area
                     position: relative
+
+                    &:before
+                        content: ''
+                        position: absolute
+                        width: 143px
+                        height: 240px
+                        left: -140px
+                        bottom: 400px
+                        background: url('./images/sponsors_content_img_area_1.png') no-repeat
+                        background-size: cover
+                        z-index: 2
+                        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                        transform: translate(var(--sponsors-content-img-area-before-x), var(--sponsors-content-img-area-before-y))
+
+                    &::after
+                        content: ''
+                        position: absolute
+                        width: 250px
+                        height: 240px
+                        right: -110px
+                        bottom: 100px
+                        background: url('./images/sponsors_content_img_area_2.png') no-repeat
+                        background-size: cover
+                        z-index: 2
+                        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)
+                        transform: translate(var(--sponsors-content-img-area-after-x), var(--sponsors-content-img-area-after-y))
 
                     .sponsors_content_img_area_content
                         margin: 0 auto
@@ -451,3 +543,142 @@ body
 
         .sponsors_content_p
             position: relative
+            padding-bottom: ˋ0px
+
+            .sponsors_content_p_content
+                margin: 0 auto
+                text-align: center
+
+                p
+                    font-size: 18px
+                    text-transform: uppercase
+                    color: #fff
+                    text-decoration: none
+                    transition: all 0.3s ease
+
+@media screen and (max-width: 1100px)
+    .sponsors
+        .sponsors_content
+            .sponsors_content_img
+                &:before
+                    display: none
+                &::after
+                    display: none
+                .sponsors_content_img_content
+                    &:before
+                        display: none
+                    &::after
+                        display: none
+                    .sponsors_content_img_area
+                        &:before
+                            display: none
+                        &::after
+                            display: none
+
+// ============================================================================================ >>  
+
+.team
+    position: relative
+    padding: 60px 0
+
+    .team_content
+        margin: 0 auto
+
+        .team_content_title
+            position: relative
+
+            .team_content_title_content
+                margin: 0 auto
+                text-align: center
+
+                h2
+                    font-size: 60px
+                    font-weight: 900
+                    font-family: 'system-ui'
+                    text-transform: uppercase
+                    color: #fff
+
+        .team_ul
+            position: relative
+            padding-top: 100px
+
+            .team_ul_content
+                margin: 0 auto
+
+                ul
+                    display: flex
+                    flex-wrap: wrap
+                    align-items: center
+                    justify-content: center
+                    gap: 40px
+
+                    li
+                        width: 20%
+                        position: relative
+                        text-align: center
+
+                        .team_li_title
+                            position: relative
+
+                            .team_li_title_content
+                                margin: 0 auto
+
+                            h4
+                                font-size: 30px
+                                font-weight: 900
+                                font-family: 'system-ui'
+                                text-transform: uppercase
+                                color: #fff
+
+                        .team_li_img
+                            position: relative
+                            padding: 40px 0
+
+                            .team_li_img_content
+                                margin: 0 auto
+
+                                img
+                                    width: 100%
+                                    height: 100%
+                                    object-fit: cover
+
+                        .team_li_p
+                            position: relative
+
+                            .team_li_p_content
+                                margin: 0 auto
+
+                            p
+                                font-size: 16px
+                                font-weight: 200
+                                text-transform: uppercase
+                                color: #fff
+                                line-height: 2
+
+@media screen and (max-width: 950px)
+    .team
+        .team_content
+            .team_content_title
+                h2
+                    font-size: 40px
+            .team_ul
+                .team_ul_content
+                    ul
+                        li
+                            width: 40%
+
+@media screen and (max-width: 500px)
+    .team
+        .team_content
+            .team_content_title
+                h2
+                    font-size: 30px
+            .team_ul
+                .team_ul_content
+                    ul
+                        li
+                            width: 80%
+
+// ============================================================================================ >>  
+    
+                                

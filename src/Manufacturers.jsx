@@ -16,71 +16,41 @@ const Manufacturers = () => {
     { src: 'https://cdn.prod.website-files.com/66a94d56fc2836a600b25d27/66e330c02ac995d335d8800e_Lummi.svg', alt: 'Lummi' }
   ];
 
-  // 響應式計算重複次數和動畫速度
-  const calculateResponsiveSettings = () => {
-    const screenWidth = window.innerWidth;
-    let itemWidth, duplicatesNeeded, animationDuration;
-    
-    if (screenWidth <= 480) {
-      // 小螢幕手機
-      itemWidth = 80;
-      animationDuration = '25s';
-    } else if (screenWidth <= 768) {
-      // 大螢幕手機/小平板
-      itemWidth = 100;
-      animationDuration = '28s';
-    } else if (screenWidth <= 1024) {
-      // 平板
-      itemWidth = 120;
-      animationDuration = '30s';
-    } else {
-      // 桌面
-      itemWidth = 120;
-      animationDuration = '35s';
-    }
-    
-    const itemsNeeded = Math.ceil(screenWidth / itemWidth) + 2;
-    duplicatesNeeded = Math.ceil(itemsNeeded / manufacturers.length);
-    
-    return {
-      duplicatedItems: Array(duplicatesNeeded).fill(manufacturers).flat(),
-      animationDuration
-    };
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  // 創建無縫滾動的項目陣列 - 複製多組以確保無縫效果
+  const createInfiniteItems = () => {
+    const items = [...manufacturers];
+    // 複製三組項目以確保無縫滾動
+    return [...items, ...items, ...items];
   };
 
-  const [responsiveSettings, setResponsiveSettings] = React.useState(() => calculateResponsiveSettings());
+  const [displayItems, setDisplayItems] = React.useState(createInfiniteItems());
 
   React.useEffect(() => {
     const handleResize = () => {
-      setResponsiveSettings(calculateResponsiveSettings());
+      setDisplayItems(createInfiniteItems());
     };
 
-    // 使用防抖動來優化性能
-    let timeoutId;
-    const debouncedResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleResize, 100);
-    };
-
-    window.addEventListener('resize', debouncedResize);
+    window.addEventListener('resize', handleResize);
     return () => {
-      window.removeEventListener('resize', debouncedResize);
-      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
     <div className="manufacturers">
       <div className="manufacturers_content">
-        <div className="manufacturers_slider">
+        <div 
+          className="manufacturers_slider"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
           <div 
-            className="manufacturers_track"
-            style={{
-              animationDuration: responsiveSettings.animationDuration
-            }}
+            className={`manufacturers_track ${isHovered ? 'paused' : ''}`}
           >
-            {responsiveSettings.duplicatedItems.map((manufacturer, index) => (
-              <div key={index} className="manufacturer_item">
+            {displayItems.map((manufacturer, index) => (
+              <div key={`${manufacturer.alt}-${index}`} className="manufacturer_item">
                 <img 
                   src={manufacturer.src} 
                   alt={manufacturer.alt}

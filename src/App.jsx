@@ -1,6 +1,7 @@
 import Header from "./Header";
 import Banner from "./Banner";
 import Sponsors from "./Sponsors";
+import Team from "./Team";
 
 function App() {
   return (
@@ -8,6 +9,7 @@ function App() {
       <Header />
       <Banner />
       <Sponsors />
+      <Team />
     </>
   );
 }
